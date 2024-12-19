@@ -1,0 +1,106 @@
+<%- include('./globales/header/header.ejs') %>
+
+<section class="d-flex justify-content-center my-5">
+  <div class="container">
+    <div class="row d-flex justify-content-center">
+      <div class="col-md-6" id="displayTemp">
+        <div class="container d-flex justify-content-center"  id="temperatureContainer"></div>
+        <div class="container">
+          <h1 class="h1 fw-bold text-center my-3" id="temperature"></h1>
+          <h2 class="h1 fw-bold text-center my-3 h4 text-info " id="text"></h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="d-flex justify-content-evenly my-5">
+    <div class="container" id="displayLocation">
+        <div class="row">
+          <h1 class="text-center h2">Données sur la localisation ville</h1>
+          <div class="container d-flex justify-content-evenly my-5 ">
+            <div class="col-lg-4 mx-auto d-flex align-content-center flex-column justify-content-center" >
+              <h6 class="text-center shadow mx-1 btn btn-outline-primary p-2" id="pays">Pays</h6>
+              <h6 class="text-center shadow mx-1 btn btn-outline-primary p-2 " id="city">Ville</h6>
+            </div>
+            <div class="col-lg-4 mx-auto d-flex align-content-center flex-column justify-content-center ">
+              <h6 class="text-center shadow mx-1 btn btn-outline-primary p-2" id="region">Région</h6>
+              <h6 class="text-center shadow mx-1 btn btn-outline-primary p-2 " id="heure">Heure</h6>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<%- include('./globales/footer/footer.ejs') %>
+
+<script>
+  let submit = document.getElementById("submitForm")
+
+  if (submit) {
+    submit.addEventListener('submit', async (e) => {
+      e.preventDefault()
+
+      let ville = document.getElementById('ville').value
+      if (ville) {
+
+        const url = `http://api.weatherapi.com/v1/current.json?key=43337960202f476987f155402241712&q=${ville}&aqi=no`
+        try {
+          const req = await fetch(url,{
+            headers:{"Contnet-Type":"application/json"},
+            method:"get"
+          })
+
+          const response = await req.json()
+          console.log(response)
+          
+          if (response && response.location) {
+            const pays = response.location.country
+            const city = response.location.name
+            const heure = response.location.localtime
+            const region = response.location.region
+
+            const temperature = response.current.temp_c
+            const text = response.current.condition.text
+            const humdite = response.current.humidity
+            const pression = response.current.pressure_mb
+            
+             //On récupère le lien de reletive de l'icon
+             const icon = response.current.condition.icon
+
+             //completons l'url pour obtenir l'icon complète
+             const urlIcon = `https:${icon}`
+            const iconMeteo = document.createElement("img")
+
+            iconMeteo.src = urlIcon
+
+            let temperatureContainer = document.getElementById("temperatureContainer")
+            temperatureContainer.innerHTML = ""
+
+            temperatureContainer.appendChild(iconMeteo)
+
+            const p = document.getElementById("pays").innerHTML = `Pays : ${pays}`
+            const v = document.getElementById("city").innerHTML = `Ville : ${city}`
+            const r = document.getElementById("region").innerHTML = `Région : ${region}`
+            const h = document.getElementById("heure").innerHTML = `Heure : ${heure}`
+            const txt = document.getElementById("text").innerHTML = `Le temps est : ${text}`
+            const t = document.getElementById("temperature").innerHTML = `Temperature : ${temperature}°C`
+
+          } else {
+            alert("Ville introuvable : saississez correctement le nom de la ville !")
+          }
+
+        } catch (error) {
+          console.log(error)
+        }
+
+        document.getElementById('ville').value = ""
+
+        
+      }
+
+    })
+  }
+</script>
+

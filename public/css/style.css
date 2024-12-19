@@ -1,0 +1,35 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.rounded-left{
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    background-color: white;
+    border-right: none;
+}
+
+.rounded-right{
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-left: none;
+}
+
+body{
+    background-color: rgba(152, 239, 251, 0.133);
+}
+
+#displayLocation{
+    border: 1px solid #000;
+    border-radius: 50px;
+    width: 90%;
+    padding: 10px;
+    background-color: #f2f2f2aa;
+}
+
+/* h6{
+   
+    border-radius: 20px;
+} */
